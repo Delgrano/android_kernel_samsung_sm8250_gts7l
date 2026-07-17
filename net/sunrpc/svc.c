@@ -1312,9 +1312,11 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
 				procp->pc_release(rqstp);
 			goto dropit;
 		}
-		auth_stat = svc_get_autherr(rqstp, statp);
-		if (auth_stat != rpc_auth_ok)
-			goto err_release_bad_auth;
+		if (*statp == rpc_autherr_badcred) {
+			if (procp->pc_release)
+				procp->pc_release(rqstp);
+			goto err_bad_auth;
+		}
 		if (*statp == rpc_success && procp->pc_encode &&
 		    !procp->pc_encode(rqstp, resv->iov_base + resv->iov_len)) {
 			dprintk("svc: failed to encode reply\n");
@@ -1454,10 +1456,14 @@ svc_process(struct svc_rqst *rqstp)
 	}
 
 	/* Returns 1 for send, 0 for drop */
-	if (likely(svc_process_common(rqstp, argv, resv)))
-		return svc_send(rqstp);
+	if (likely(svc_process_common(rqstp, argv, resv))) {
+		int ret = svc_send(rqstp);
 
+		trace_svc_process(rqstp, ret);
+		return ret;
+	}
 out_drop:
+	trace_svc_process(rqstp, 0);
 	svc_drop(rqstp);
 	return 0;
 }

@@ -88,10 +88,25 @@ static inline void mangle(struct seq_file *m, const char *s)
 static void show_type(struct seq_file *m, struct super_block *sb)
 {
 	mangle(m, sb->s_type->name);
-	if (sb->s_subtype) {
+	if (sb->s_subtype && sb->s_subtype[0]) {//) {
 		seq_putc(m, '.');
 		mangle(m, sb->s_subtype);
 	}
+}
+
+static inline int skip_magisk_entry(const char *devname)
+{//fs/proc: hide magisk mounts for IsolatedService & enable it in defconfig
+#ifdef CONFIG_PROC_MAGISK_HIDE_MOUNT
+	if (devname && strstr(devname, "magisk")) {
+		char name[TASK_COMM_LEN];
+		get_task_comm(name, current);
+		if (strstr(name, "Binder") ||
+		    strstr(name, "JavaBridge")) {
+			return SEQ_SKIP;
+		}
+	}
+#endif
+	return 0;
 }
 
 static int show_vfsmnt(struct seq_file *m, struct vfsmount *mnt)
@@ -107,6 +122,9 @@ static int show_vfsmnt(struct seq_file *m, struct vfsmount *mnt)
 		if (err)
 			goto out;
 	} else {
+		err = skip_magisk_entry(r->mnt_devname);
+		if (err)
+			goto out;
 		mangle(m, r->mnt_devname ? r->mnt_devname : "none");
 	}
 	seq_putc(m, ' ');
@@ -179,6 +197,9 @@ static int show_mountinfo(struct seq_file *m, struct vfsmount *mnt)
 		if (err)
 			goto out;
 	} else {
+		err = skip_magisk_entry(r->mnt_devname);
+		if (err)
+			goto out;
 		mangle(m, r->mnt_devname ? r->mnt_devname : "none");
 	}
 	seq_puts(m, sb_rdonly(sb) ? " ro" : " rw");
@@ -210,6 +231,10 @@ static int show_vfsstat(struct seq_file *m, struct vfsmount *mnt)
 			goto out;
 	} else {
 		if (r->mnt_devname) {
+			err = skip_magisk_entry(r->mnt_devname);
+			if (err)
+				goto out;
+
 			seq_puts(m, "device ");
 			mangle(m, r->mnt_devname);
 		} else
@@ -253,6 +278,13 @@ static int mounts_open_common(struct inode *inode, struct file *file,
 	if (!task)
 		goto err;
 
+#ifdef CONFIG_PROC_MAGISK_HIDE_MOUNT
+	if(!strncmp("IsolatedService", task->comm, 15))
+	{
+		ret = -EINVAL;
+		goto err;
+	}
+#endif
 	task_lock(task);
 	nsp = task->nsproxy;
 	if (!nsp || !nsp->mnt_ns) {

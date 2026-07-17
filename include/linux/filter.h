@@ -1140,6 +1140,11 @@ static inline bool ebpf_jit_enabled(void)
 	return false;
 }
 
+static inline bool bpf_jit_blinding_enabled(struct bpf_prog *prog)
+{// this method Fix implicit declaration of function bpf_jit_blinding_enabled
+	return false;
+}
+
 static inline bool bpf_prog_ebpf_jited(const struct bpf_prog *fp)
 {
 	return false;

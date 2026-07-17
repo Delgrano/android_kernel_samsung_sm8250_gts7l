@@ -32,7 +32,7 @@ static inline u32 task_netprioidx(struct task_struct *p)
 
 	rcu_read_lock();
 	css = task_css(p, net_prio_cgrp_id);
-	idx = css->id;
+	idx = css->cgroup->kn->id; //idx = css->id; Fix: error: no member named 'id' in 'struct cgroup'
 	rcu_read_unlock();
 	return idx;
 }

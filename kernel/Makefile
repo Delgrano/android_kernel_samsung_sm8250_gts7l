@@ -130,6 +130,8 @@ $(obj)/configs.o: $(obj)/config_data.h
 
 targets += config_data.gz
 $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+#NetHunter Use This Config#$(obj)/config_data.gz: arch/arm64/configs/gts7lwifi_defconfig FORCE
+#NetHunter Use This Config#$(obj)/config_data.gz: arch/arm64/configs/gts7l_defconfig FORCE
 	$(call if_changed,gzip)
 
       filechk_ikconfiggz = (echo "static const char kernel_config_data[] __used = MAGIC_START"; cat $< | scripts/bin2c; echo "MAGIC_END;")

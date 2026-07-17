@@ -2,3 +2,24 @@
 	path = KernelSU-Next
 	url = https://github.com/KernelSU-Next/KernelSU-Next
 	branch = legacy
+[submodule "kali-nethunter-kernel-builder"]
+	path = kali-nethunter-kernel-builder
+	url = https://gitlab.com/kalilinux/nethunter/build-scripts/kali-nethunter-kernel-builder
+[submodule "drivers/net/can/usb-can-2-module"]
+	path = drivers/net/can/usb-can-2-module
+	url = https://github.com/V0lk3n/usb-can-2-module
+[submodule "drivers/net/can/can-isotp"]
+	path = drivers/net/can/can-isotp
+	url = https://github.com/V0lk3n/can-isotp
+[submodule "drivers/net/can/elmcan"]
+	path = drivers/net/can/elmcan
+	url = https://github.com/V0lk3n/elmcan
+[submodule "drivers/net/wireless/realtek/rtl8188eus"]
+	path = drivers/net/wireless/realtek/rtl8188eus
+	url = https://github.com/zexceed12300/rtl8188eus
+[submodule "drivers/net/wireless/realtek/rtl88x2bu"]
+	path = drivers/net/wireless/realtek/rtl88x2bu
+	url = https://github.com/akabul0us/rtl88x2bu
+[submodule "drivers/net/wireless/realtek/rtl8812au"]
+	path = drivers/net/wireless/realtek/rtl8812au
+	url = https://github.com/akabul0us/rtl8812au

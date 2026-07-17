@@ -94,6 +94,33 @@ config CAN_AT91
 	  This is a driver for the SoC CAN controller in Atmel's AT91SAM9263
 	  and AT91SAM9X5 processors.
 
+config CAN_BFIN
+	depends on BF534 || BF536 || BF537 || BF538 || BF539 || BF54x
+	tristate "Analog Devices Blackfin on-chip CAN"
+	---help---
+	  Driver for the Analog Devices Blackfin on-chip CAN controllers
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called bfin_can.
+
+config CAN_CAN327
+	tristate "Serial / USB serial ELM327 based OBD-II Interfaces (can327)"
+	depends on TTY
+	select CAN_RX_OFFLOAD
+	help
+	  CAN driver for several 'low cost' OBD-II interfaces based on the
+	  ELM327 OBD-II interpreter chip.
+
+	  This is a best effort driver - the ELM327 interface was never
+	  designed to be used as a standalone CAN interface. However, it can
+	  still be used for simple request-response protocols (such as OBD II),
+	  and to monitor broadcast messages on a bus (such as in a vehicle).
+
+	  Please refer to the documentation for information on how to use it:
+	  Documentation/networking/device_drivers/can/can327.rst
+
+	  If this driver is built as a module, it will be called can327.
+
 config CAN_FLEXCAN
 	tristate "Support for Freescale FLEXCAN based chips"
 	depends on ARM || PPC
@@ -153,6 +180,7 @@ config PCH_CAN
 	  This driver can access CAN bus.
 
 source "drivers/net/can/c_can/Kconfig"
+source "drivers/net/can/can-isotp/Kconfig"
 source "drivers/net/can/cc770/Kconfig"
 source "drivers/net/can/ifi_canfd/Kconfig"
 source "drivers/net/can/m_can/Kconfig"
@@ -163,6 +191,7 @@ source "drivers/net/can/sja1000/Kconfig"
 source "drivers/net/can/softing/Kconfig"
 source "drivers/net/can/spi/Kconfig"
 source "drivers/net/can/usb/Kconfig"
+source "drivers/net/can/usb-can-2-module/Kconfig"
 
 endif
 
