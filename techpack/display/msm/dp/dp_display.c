@@ -4392,7 +4392,7 @@ static int dp_display_unprepare(struct dp_display *dp_display, void *panel)
 	if (dp->active_stream_cnt)
 		goto end;
 
-	retain_link_power = IS_ENABLED(CONFIG_SEC_GTS7L_PROJECT) &&
+	retain_link_power = (IS_ENABLED(CONFIG_SEC_GTS7L_PROJECT) || IS_ENABLED(CONFIG_SEC_GTS7XL_PROJECT)) &&
 		(flags & DP_PANEL_SRC_INITIATED_POWER_DOWN) &&
 		!dp_display_state_is(DP_STATE_SUSPENDED);
 
