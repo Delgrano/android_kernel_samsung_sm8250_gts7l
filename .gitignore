@@ -140,5 +140,9 @@ kernel/configs/android-*.cfg
 #
 Android.bp
 
-# ignore out/ directory
+# ignore out/ directories
 out/
+out-gts7l/
+out-gts7lwifi/
+out-gts7xl/
+out-gts7xlwifi/
